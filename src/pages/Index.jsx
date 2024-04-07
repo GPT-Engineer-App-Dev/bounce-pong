@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Button, Flex, Heading, keyframes } from "@chakra-ui/react";
 
-const PADDLE_WIDTH = 100;
+const PADDLE_WIDTH = 1002;
 const PADDLE_HEIGHT = 80;
 const BALL_SIZE = 10;
 const GAME_WIDTH = 600;
