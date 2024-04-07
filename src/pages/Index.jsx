@@ -19,6 +19,7 @@ const Index = () => {
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
 
   const gameRef = useRef(null);
 
@@ -55,11 +56,27 @@ const Index = () => {
       }
 
       if (ballX <= 0) {
-        setPlayer2Score((prevScore) => prevScore + 1);
-        resetBall();
+        setPlayer2Score((prevScore) => {
+          const newScore = prevScore + 1;
+          if (newScore === 5) {
+            setGameEnded(true);
+            setGameStarted(false);
+          } else {
+            resetBall();
+          }
+          return newScore;
+        });
       } else if (ballX >= GAME_WIDTH - BALL_SIZE) {
-        setPlayer1Score((prevScore) => prevScore + 1);
-        resetBall();
+        setPlayer1Score((prevScore) => {
+          const newScore = prevScore + 1;
+          if (newScore === 5) {
+            setGameEnded(true);
+            setGameStarted(false);
+          } else {
+            resetBall();
+          }
+          return newScore;
+        });
       }
     };
 
@@ -99,6 +116,20 @@ const Index = () => {
 
   const startGame = () => {
     setGameStarted(true);
+    setGameEnded(false);
+  };
+
+  const resetGame = () => {
+    setPlayer1Y(GAME_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+    setPlayer2Y(GAME_HEIGHT / 2 - PADDLE_HEIGHT / 2);
+    setBallX(GAME_WIDTH / 2 - BALL_SIZE / 2);
+    setBallY(GAME_HEIGHT / 2 - BALL_SIZE / 2);
+    setBallSpeedX(BALL_SPEED);
+    setBallSpeedY(BALL_SPEED);
+    setPlayer1Score(0);
+    setPlayer2Score(0);
+    setGameStarted(false);
+    setGameEnded(false);
   };
 
   const bounce = keyframes`
@@ -121,9 +152,14 @@ const Index = () => {
         <Box>Player 1: {player1Score}</Box>
         <Box>Player 2: {player2Score}</Box>
       </Flex>
-      {!gameStarted && (
+      {!gameStarted && !gameEnded && (
         <Button mt={8} onClick={startGame}>
           Start Game
+        </Button>
+      )}
+      {gameEnded && (
+        <Button mt={8} onClick={resetGame}>
+          Restart Game
         </Button>
       )}
     </Flex>
